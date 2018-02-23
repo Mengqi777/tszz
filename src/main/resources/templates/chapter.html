@@ -1,0 +1,195 @@
+﻿<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title id="title">读书有害健康</title>
+    <link rel="shortcut icon" href="/static/images/favicon.ico" type="image/x-icon"/>
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css" type="text/css">
+    <script type="text/javascript" src="/static/js/vue.min.js"></script>
+    <script type="text/javascript" src="/static/js/jquery-3.2.0.min.js"></script>
+    <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/static/js/axios.min.js"></script>
+
+</head>
+<body style="background-color: #F1E5C7" onclick="test(event);">
+<div class="container">
+    <div class="row">
+        <div class="col-md-4" id="test"></div>
+        <div class="col-md-4">
+            <div><h4><a href="/web/novel/index">首页</a></h4>
+                <table id="chapter" class="table table-striped" style="margin-top: 10px">
+                    <thead>
+                    <tr>
+                        <th>{{chapterName}}</th>
+                    </tr>
+                    </thead>
+                </table>
+                <div id="contentdata" style="font-size: 18px" >
+
+                </div>
+                <div id="funcbtn" style="text-align: center">
+                    <br/>
+                    <h4>
+                    <button id="pre" class="btn btn-link" v-on:click="gopre">上一章</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a  class="btn btn-link" v-bind:href="mulu">目录</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <button id="next" class="btn btn-link" v-on:click="gonext">下一章</button>
+                    </h4>
+                    <br/>
+                </div>
+            </div>
+            <div class="col-md-4">
+
+
+            </div>
+        </div>
+    </div>
+    <script>
+
+function test(event) {
+//    event=event||window.event;
+//    var height=screen.availHeight;
+//    var width=screen.availWidth;
+//    console.log("高："+height+"   宽："+width);
+//
+//    var x=event.clientX;
+//    var y=event.clientY;
+//    console.log("x："+x+"   y："+y);
+//
+//    var page_y=window.pageYOffset;
+//    var page_x=window.pageXOffset;
+//    if(y<=(height/2)){
+//        $("#contentdata").animate({ scrollTop: page_y-height+150 }, 500);
+//    }else {
+//        $("#contentdata").animate({ scrollTop: page_y+height-150 }, 500);
+//
+//    }
+}
+
+        
+        function load (){
+            var height=screen.availHeight;
+            var width=screen.availWidth;
+            document.addEventListener('touchstart',touch, false);
+            document.addEventListener('touchmove',touch, false);
+            document.addEventListener('touchend',touch, false);
+
+
+
+            function touch (event){
+                var event = event || window.event;
+
+                var oInp = document.getElementById("contentdata");
+
+                switch(event.type){
+                    case "touchstart":
+                        var touch_x=event.touches[0].clientX;
+                        var touch_y=event.touches[0].clientY;
+                        var page_y=window.pageYOffset;
+                        var page_x=window.pageXOffset;
+                        if(touch_y<=(height/2)){
+                            $("html,body").animate({ scrollTop: page_y-height+150 }, 300);
+                        }else if(touch_y<height-200){
+                            $("html,body").animate({ scrollTop: page_y+height-150 }, 300);
+
+                        }
+
+                        break;
+                }
+
+            }
+        }
+        window.addEventListener('load',load, false);
+
+
+
+        function updateContent(response){
+            if (response.data.nextChapter == '0') {
+                $("#next").hide();
+            }else {
+                $("#next").show();
+            }
+            if (response.data.preChapter == '0') {
+                $("#pre").hide();
+            }else {
+                $("#pre").show();
+            }
+            chapter.preChapter=response.data.preChapter;
+            chapter.nextChapter=response.data.nextChapter;
+
+            contentdata.content=response.data.content;
+            chapter.chapterName=response.data.chapterName;
+            contentdata.update();
+            window.scrollTo(0,0);
+        }
+
+        var chapter = new Vue({
+            el: '#chapter',
+            data: {
+                chapterName: '${chapterName}',
+                chapterId: '${chapterId}',
+                preChapter: '${preChapter}',
+                nextChapter: '${nextChapter}'
+            }
+        });
+
+        var contentdata = new Vue({
+            el: '#contentdata',
+            data:{
+                content:'${content}'
+            },
+            created:function () {
+                $("#contentdata").html(this.content)
+            },
+            methods:{
+                update:function () {
+                    $("#contentdata").html(this.content)
+                }
+            }
+        });
+
+        var funcbtn = new Vue({
+            el: '#funcbtn',
+            data: {
+                dbName: '${dbName}',
+                mulu: "/web/novel/" + '${dbName}'
+            },
+            created: function () {
+                if ('${nextChapter}' == '0') {
+                    $("#next").hide();
+                }
+                if ('${preChapter}' == '0') {
+                    $("#pre").hide();
+                }
+            },
+            methods:{
+                gopre:function (event) {
+                    axios({
+                        method: 'get',
+                        url: '/web/novel/'+this.dbName+"/go/"+chapter.preChapter
+                    }).then(function (response) {
+                        updateContent(response);
+                    });
+                },
+
+                gonext:function (event) {
+                    axios({
+                        method: 'get',
+                        url: '/web/novel/'+this.dbName+"/go/"+chapter.nextChapter
+                    }).then(function (response) {
+                        updateContent(response);
+                    })
+                    ;
+                }
+            }
+        }
+        );
+
+        var title = new Vue({
+            el: '#title',
+            data: {
+                chapterName: '${chapterName}'
+            }
+        });
+    </script>
+</body>
+</html>

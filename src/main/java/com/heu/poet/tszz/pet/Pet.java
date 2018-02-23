@@ -2,12 +2,15 @@ package com.heu.poet.tszz.pet;
 
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 
 /**
  * @author MengQi
  * @create 2018-02-03 17:14
  */
+@Document
+@SuppressWarnings(value = "unused")
 public class Pet {
 
     @Id

@@ -16,7 +16,7 @@ public class SessionConfiguration implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/images/**").addResourceLocations("file:" + System.getProperty("user.dir") + "/images/");
+        registry.addResourceHandler("/images/**").addResourceLocations("file:" + System.getProperty("user.dir") + "/images/").addResourceLocations("classpath:/static/");
     }
 
 

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>添加小说</title>
+</head>
+<body>
+<div id="container" style="padding: 100px 100px;height: 100%;text-align: center">
+<form action="/web/novel/addnovel" method="get">
+    <p>书 名: <input type="text" name="name" /></p>
+    <p>数据库名称: <input type="text" name="dbName" /></p>
+    <p>地 址: <input type="text" name="url" /></p>
+    <input type="submit" value="Submit" />
+</form>
+</div>
+</body>
+</html>

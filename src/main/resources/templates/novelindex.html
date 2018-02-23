@@ -1,0 +1,49 @@
+﻿<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:v-bind="http://java.sun.com/jsf/composite">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>书库</title>
+    <link rel="shortcut icon" href="/images/images/favicon.ico" type="image/x-icon"/>
+    <link rel="stylesheet" href="/images/css/bootstrap.min.css" type="text/css">
+    <script type="text/javascript" src="/images/js/vue.min.js"></script>
+    <script type="text/javascript" src="/images/js/jquery-3.2.0.min.js"></script>
+    <script type="text/javascript" src="/images/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/images/js/axios.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+        <table id="novel" class="table table-striped" style="margin-top: 100px">
+            <caption>书籍列表</caption>
+            <thead>
+            <tr>
+                <th>书名</th>
+                <th>上次读到</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr v-for="novel in novellist">
+                <td><img style="height:100px;width:100px" v-bind:src="[novel.fmimg]"><br/><a v-bind:href="['/web/novel/'+novel.dbName]" >{{novel.name}}</a></td>
+                <td><a v-bind:href="['/web/novel/'+novel.dbName+'/'+novel.historyId]">{{novel.history}}</a></td>
+            </tr>
+            </tbody>
+        </table>
+        </div>
+        <div class="col-md-4"></div>
+    </div>
+</div>
+<script>
+
+    var novel = new Vue({
+        el: '#novel',
+        data: {
+            novellist: JSON.parse('${novellist}')
+        }
+    });
+
+</script>
+</body>
+</html>

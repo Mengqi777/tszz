@@ -2,6 +2,7 @@ package com.heu.poet.tszz.travel;
 
 import com.heu.poet.tszz.treasure.Treasure;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
 
@@ -10,6 +11,8 @@ import java.util.List;
  * @author MengQi
  * @create 2018-02-03 17:36
  */
+@Document
+@SuppressWarnings(value = "unused")
 public class Travel {
     @Id
     private String id;

@@ -1,11 +1,14 @@
 package com.heu.poet.tszz.treasure;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
  * @author MengQi
  * @create 2018-02-03 17:39
  */
+@Document
+@SuppressWarnings(value = "unused")
 public class Treasure {
     @Id
     private String id;

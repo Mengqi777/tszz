@@ -3,6 +3,7 @@ package com.heu.poet.tszz.customer;
 import com.heu.poet.tszz.pet.Pet;
 import com.heu.poet.tszz.treasure.Treasure;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.List;
  * @author MengQi
  * @create 2018-01-08 15:04
  */
+@Document
 @SuppressWarnings(value = "unused")
 public class Customer {
 

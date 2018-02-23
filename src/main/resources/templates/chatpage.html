@@ -1,0 +1,250 @@
+﻿<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="/images/images/favicon.ico" type="image/x-icon"/>
+    <link rel="stylesheet" href="/images/css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="/images/css/chatroomstyle.css" type="text/css">
+
+
+    <script type="text/javascript" src="/images/js/vue.min.js"></script>
+    <script type="text/javascript" src="/images/js/jquery-3.2.0.min.js"></script>
+    <script type="text/javascript" src="/images/js/bootstrap.min.js"></script>
+    <title>ChatRoom测试</title>
+    <style type="text/css">
+        #roomInfo{
+
+            color: white;
+        }
+        #nav{
+            color: white;
+            background-color: #66afe9;
+        }
+        .hr{
+            height:1px;
+            border:none;
+            border-top:1px dashed #0066CC;
+        }
+
+    </style>
+</head>
+<body >
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <!--<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>-->
+                <h4 class="modal-title" id="myModalLabel">输入昵称</h4>
+            </div>
+            <div class="modal-body">
+                <input type="text" id="nameElement" placeholder="请输入昵称">&nbsp;&nbsp;<label id="nickNameInfo"></label>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" onclick="connWS()">确定</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+<div class="row"id="nav">
+    <div class="col-md-5 column"  style="text-align: center">
+        <h1 >ChatRoomDemo</h1>
+    </div>
+</div>
+<div class="container">
+<div class="row clearfix" style="margin-top:50px"></div>
+<div class="col-md-2 column" >
+    <div id="roomInfo" >
+        <label>{{connInfo}}</label>
+        <h4>{{onlineCount}}</h4>
+        <hr class="hr"/>
+        <div class="" v-for="user in userList">
+            <label >{{user}}</label>
+        </div>
+    </div>
+
+</div>
+<div class="col-md-8 column">
+    <div id="chatWindow">
+        <div class="credits">请文明发言，富强民主文明和谐</div>
+        <div id="convo">
+            <ul class="chat-thread" id="chatcontent">
+            </ul>
+             <div id="inputwindow">
+                <textarea id="text"  placeholder="输入消息"></textarea>
+                <button onclick="send()" class="btn btn-default"style="margin-left: 20px;margin-bottom: 25px" >发送</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+</div>
+<div class="col-md-1 column"><button onclick="closeWebSocket()">关闭</button></div>
+
+
+<script>
+
+
+
+    /**
+     * 格式化时间
+     * @param fmt
+     * @returns {*}
+     */
+    Date.prototype.format = function (fmt) {
+        var o = {
+            "M+": this.getMonth() + 1,                 //月份
+            "d+": this.getDate(),                    //日
+            "h+": this.getHours(),                   //小时
+            "m+": this.getMinutes(),                 //分
+            "s+": this.getSeconds(),                 //秒
+            "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+            "S": this.getMilliseconds()             //毫秒
+        };
+        if (/(y+)/.test(fmt)) {
+            fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+        }
+        for (var k in o) {
+            if (new RegExp("(" + k + ")").test(fmt)) {
+                fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+            }
+        }
+        return fmt;
+    };
+
+    var message={
+      "from":nickName,
+      "type":"chat",
+      "time":"",
+      "data":""
+    };
+    $(document).ready(function(){
+        $('#myModal').modal('show');
+    });
+
+    var userList=[];
+    var d = new Date();
+    var n = d.getMilliseconds();
+    
+    function isNotLegalName(nickName) {
+        return /,/.test(nickName);
+    }
+
+    var roomInfo=new Vue({
+        el:"#roomInfo",
+        data:{
+            onlineCount:"",
+            userList:null,
+            connInfo:""
+        },
+        methods:{
+            refreshUserList:function (event) {
+                roomInfo.userList=userList;
+            }
+        }
+    });
+
+    var websocket = null;
+    var nickName=null;
+    function connWS() {
+
+
+
+        nickName=$("#nameElement").val();
+        nickName=String(nickName).trim();
+        console.log(nickName);
+        if(nickName===""||nickName===undefined){
+         //   alert("请输入昵称");
+            $("#nickNameInfo").text("请输入昵称");
+            return;
+        }if(isNotLegalName(nickName)){
+            $("#nickNameInfo").text("昵称不合法");
+            return;
+        }
+         nickName=nickName+n;
+        $('#myModal').modal('hide');
+
+        //判断当前浏览器是否支持WebSocket
+        if ('WebSocket' in window) {
+            console.log("支持 websocket");
+            websocket = new WebSocket("wss://api.mengqipoet.cn/websocket?nickName="+nickName);
+            // websocket = new WebSocket("ws://localhost:8080/websocket?nickName="+nickName);
+        }
+        else {
+            alert('当前浏览器 Not support websocket')
+        }
+
+        //连接发生错误的回调方法
+        websocket.onerror = function () {
+            roomInfo.connInfo="WebSocket连接发生错误";
+            roomInfo.onlineCount="当前在线：0 人";
+            userList=[];
+        };
+        //连接成功建立的回调方法
+        websocket.onopen = function () {
+            roomInfo.connInfo="WebSocket连接成功";
+        };
+        //接收到消息的回调方法
+        websocket.onmessage = function (event) {
+            console.log(event);
+            var data=JSON.parse(event.data);
+            console.log(data);
+            if(data['type']=="userList"){
+                userList=data['data'];
+                console.log(userList);
+                roomInfo.onlineCount="当前在线："+userList.length+" 人";
+                roomInfo.refreshUserList();
+                console.log(roomInfo.userList);
+            }else if (data['type']=="chat") {
+                if(data['from']!=nickName){
+                    console.log(data);
+                    $("#chatcontent").append("<div></div><li>"+data['from']+" "+data['time']+"<br/>"+data['data']+"</li>");
+                    document.getElementById('chatcontent').scrollTop = document.getElementById('chatcontent').scrollHeight
+                }
+
+            }else {
+
+            }
+
+        };
+        //连接关闭的回调方法
+        websocket.onclose = function () {
+            roomInfo.connInfo="WebSocket连接关闭";
+            roomInfo.onlineCount="当前在线：0 人";
+            userList=[];
+
+        };
+        //监听窗口关闭事件，当窗口关闭时，主动去关闭websocket连接，防止连接还没断开就关闭窗口，server端会抛异常。
+        window.onbeforeunload = function () {
+            closeWebSocket();
+        };
+    }
+
+
+
+
+    //关闭WebSocket连接
+    function closeWebSocket() {
+        websocket.close();
+    }
+
+
+    //发送消息
+    function send() {
+        var content =$("#text").val();
+        console.log(content);
+        if(content!=="" && content !== undefined){
+            message.data=content;
+            message.from=nickName;
+            message.time=new Date().format("yyyy-MM-dd hh:mm:ss");
+            websocket.send(JSON.stringify(message));
+            $("#chatcontent").append("<li>"+message.from+" "+message.time+"<br/>"+content+"</li><div></div>");
+            document.getElementById('chatcontent').scrollTop = document.getElementById('chatcontent').scrollHeight;
+            $("#text").val("");
+        }
+    }
+
+</script>
+
+</body>
+</html>
