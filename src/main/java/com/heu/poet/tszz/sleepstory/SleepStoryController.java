@@ -31,8 +31,8 @@ public class SleepStoryController {
 
 
     @RequestMapping(value = "getbydatetime", method = RequestMethod.GET)
-    public SleepStory get(@RequestParam("dateTime") String dateTime) {
-        return sleepStoryRepository.findSleepStoryByDateTime(dateTime);
+    public SleepStory getByDateContains(@RequestParam("dateTime") String dateTime) {
+        return sleepStoryService.getByDateContains(dateTime);
     }
 
     @RequestMapping(value = "getall", method = RequestMethod.GET)

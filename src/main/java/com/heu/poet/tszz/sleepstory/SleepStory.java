@@ -18,7 +18,7 @@ public class SleepStory {
 
     private String dateTime;
 
-    private String content;
+    private String content="";
 
     private String title;
 

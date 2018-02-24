@@ -48,6 +48,10 @@ public class SleepStoryService {
         return list;
     }
 
+    public SleepStory getByDateContains(String dateTime){
+        List<SleepStory> res = sleepStoryRepository.findSleepStoryByDateTimeContains(dateTime);
+        return res.size()==0?null:res.get(res.size()-1);
+    }
 
     public List<SleepStory> getByAuthor(String author,int pageNumber){
         PageRequest pageRequest=buildPageRequest(pageNumber,10,"id");

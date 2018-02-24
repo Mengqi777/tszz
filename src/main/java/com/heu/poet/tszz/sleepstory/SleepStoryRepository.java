@@ -14,7 +14,7 @@ import java.util.List;
 public interface SleepStoryRepository extends MongoRepository<SleepStory, String> {
     SleepStory findSleepStoryById(String id);
     Page<SleepStory> findSleepStoriesByAuthor(String author, Pageable pageable);
-    SleepStory findSleepStoryByDateTime(String dateTime);
+    List<SleepStory> findSleepStoryByDateTimeContains(String dateTime);
 
     @Override
     Page<SleepStory> findAll(Pageable pageable);
