@@ -1,12 +1,14 @@
 package com.heu.poet.tszz.sleepstory;
 
 
-import com.heu.poet.tszz.customer.Customer;
-import com.heu.poet.tszz.customer.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -20,14 +22,14 @@ import java.util.List;
 public class SleepStoryService {
 
 
-    private SleepStoryRepository sleepStoryRepository;
+    private final SleepStoryRepository sleepStoryRepository;
 
-    private CustomerRepository customerRepository;
+    private final MongoTemplate mongoTemplate;
 
     @Autowired
-    public SleepStoryService(SleepStoryRepository sleepStoryRepository, CustomerRepository customerRepository) {
+    public SleepStoryService(SleepStoryRepository sleepStoryRepository, MongoTemplate mongoTemplate) {
         this.sleepStoryRepository = sleepStoryRepository;
-        this.customerRepository = customerRepository;
+        this.mongoTemplate = mongoTemplate;
     }
 
     /**
@@ -49,15 +51,43 @@ public class SleepStoryService {
     }
 
     public SleepStory getByDateContains(String dateTime){
-        List<SleepStory> res = sleepStoryRepository.findSleepStoryByDateTimeContains(dateTime);
+        List<SleepStory> res = sleepStoryRepository.findSleepStoryByDateTimeContainsAndStatus(dateTime,"1");
         return res.size()==0?null:res.get(res.size()-1);
     }
 
-    public List<SleepStory> getByAuthor(String author,int pageNumber){
-        PageRequest pageRequest=buildPageRequest(pageNumber,10,"id");
-        Page<SleepStory> pages = sleepStoryRepository.findSleepStoriesByAuthor(author,pageRequest);
+
+    public List<SleepStory> getByAuthorId(String authorId,int pageNumber){
+        PageRequest pageRequest=buildPageRequest(pageNumber,10,"timestamp");
+        Page<SleepStory> pages = sleepStoryRepository.findSleepStoriesByAuthorIdAndStatus(authorId,"1",pageRequest);
         List<SleepStory> list = new ArrayList<>();
         pages.forEach(list::add);
         return list;
     }
+
+
+    public void delById(String id){
+        Query query = new Query();
+        query.addCriteria(new Criteria("_id").is(id));
+        Update update = new Update();
+        update.set("status", "-1");
+        mongoTemplate.updateFirst(query,update,SleepStory.class);
+    }
+
+
+    public List<SleepStory> getByTimestampLess(long timestamp,String toWho){
+        List<SleepStory> list = new ArrayList<>();
+
+        PageRequest pageRequest_1=buildPageRequest(0,1,"timestamp");
+        Page<SleepStory> pages_1 = sleepStoryRepository.findSleepStoryByTimestampLessThanAndToWhoAndStatus(timestamp,toWho,"1",pageRequest_1);
+
+        PageRequest pageRequest=buildPageRequest(0,10,"timestamp");
+        Page<SleepStory> pages = sleepStoryRepository.findSleepStoryByTimestampLessThanAndToWhoAndStatus(timestamp,"everyone","1",pageRequest);
+        pages.forEach(list::add);
+
+        pages_1.forEach(list::add);
+
+        return list;
+    }
+
+
 }

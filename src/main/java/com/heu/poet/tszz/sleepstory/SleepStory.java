@@ -24,16 +24,81 @@ public class SleepStory {
 
     private String author;
 
+    private String authorId;
+
+    private String toWho;
+
+    private String status;
+
+    private int good=1;
+
+    private int bad=1;
+
+    private long timestamp;
 
     public SleepStory() {
 super();    }
 
-    public SleepStory(String id, String dateTime, String content, String title, String author) {
+    public SleepStory(String id, String dateTime, String content, String title, String author, String authorId, String toWho, String status, int good, int bad, long timestamp) {
         this.id = id;
         this.dateTime = dateTime;
         this.content = content;
         this.title = title;
         this.author = author;
+        this.authorId = authorId;
+        this.toWho = toWho;
+        this.status = status;
+        this.good = good;
+        this.bad = bad;
+        this.timestamp = timestamp;
+    }
+
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public String getAuthorId() {
+        return authorId;
+    }
+
+    public void setAuthorId(String authorId) {
+        this.authorId = authorId;
+    }
+
+    public String getToWho() {
+        return toWho;
+    }
+
+    public void setToWho(String toWho) {
+        this.toWho = toWho;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public int getGood() {
+        return good;
+    }
+
+    public void setGood(int good) {
+        this.good = good;
+    }
+
+    public int getBad() {
+        return bad;
+    }
+
+    public void setBad(int bad) {
+        this.bad = bad;
     }
 
     public String getId() {

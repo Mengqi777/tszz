@@ -46,4 +46,23 @@ public class SleepStoryController {
     }
 
 
+    @RequestMapping(value = "getbytimestamp", method = RequestMethod.GET)
+    public List<SleepStory> getByTimestampLess(@RequestParam("timestamp") long timestamp,
+                                               @RequestParam("toWho") String  toWho) {
+        return sleepStoryService.getByTimestampLess(timestamp,toWho);
+    }
+
+
+    @RequestMapping(value = "getbyauthorid", method = RequestMethod.GET)
+    public List<SleepStory> getByAuthorId(@RequestParam("authorId") String  authorId,
+                                          @RequestParam("pageNumber") int  pageNumber) {
+        return sleepStoryService.getByAuthorId(authorId,pageNumber);
+    }
+
+
+
+    @RequestMapping(value = "delbyid", method = RequestMethod.GET)
+    public void delById(@RequestParam("id") String id) {
+        sleepStoryService.delById(id);
+    }
 }
