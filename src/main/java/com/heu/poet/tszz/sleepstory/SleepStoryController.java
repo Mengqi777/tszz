@@ -35,6 +35,12 @@ public class SleepStoryController {
         return sleepStoryService.getByDateContains(dateTime);
     }
 
+
+    @RequestMapping(value = "getbyid", method = RequestMethod.GET)
+    public SleepStory getById(@RequestParam("id") String id) {
+        return sleepStoryRepository.findSleepStoryById(id);
+    }
+
     @RequestMapping(value = "getall", method = RequestMethod.GET)
     public List<SleepStory> getAll(@RequestParam("pageNumber") int pageNumber) {
         return sleepStoryService.getAll(pageNumber);
