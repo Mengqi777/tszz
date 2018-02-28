@@ -15,6 +15,8 @@ public class LoginLogs {
 
     private String dateTime;
 
+    private String nickName;
+
     private String page;
 
  private UserInfo userInfo;
@@ -23,12 +25,21 @@ public class LoginLogs {
         super();
     }
 
-    public LoginLogs(String id, String ip, String dateTime, String page, UserInfo userInfo) {
+    public LoginLogs(String id, String ip, String dateTime, String nickName, String page, UserInfo userInfo) {
         this.id = id;
         this.ip = ip;
         this.dateTime = dateTime;
+        this.nickName = nickName;
         this.page = page;
         this.userInfo = userInfo;
+    }
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
     }
 
     public String getId() {

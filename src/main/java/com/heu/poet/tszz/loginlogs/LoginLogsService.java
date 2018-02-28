@@ -21,6 +21,7 @@ public class LoginLogsService {
 
     public LoginLogs add(LoginLogs loginLogs, HttpServletRequest request){
         loginLogs.setIp(request.getRemoteAddr());
+        loginLogs.setNickName(loginLogs.getUserInfo().getNickName());
         return loginLogsRepository.insert(loginLogs);
     }
 }
