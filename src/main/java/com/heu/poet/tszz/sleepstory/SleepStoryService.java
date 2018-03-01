@@ -77,14 +77,13 @@ public class SleepStoryService {
     public List<SleepStory> getByTimestampLess(long timestamp,String toWho){
         List<SleepStory> list = new ArrayList<>();
 
-        PageRequest pageRequest_1=buildPageRequest(0,1,"timestamp");
+        PageRequest pageRequest_1=buildPageRequest(0,2,"timestamp");
         Page<SleepStory> pages_1 = sleepStoryRepository.findSleepStoryByTimestampLessThanAndToWhoAndStatus(timestamp,toWho,"1",pageRequest_1);
+        pages_1.forEach(list::add);
 
         PageRequest pageRequest=buildPageRequest(0,10,"timestamp");
         Page<SleepStory> pages = sleepStoryRepository.findSleepStoryByTimestampLessThanAndToWhoAndStatus(timestamp,"everyone","1",pageRequest);
         pages.forEach(list::add);
-
-        pages_1.forEach(list::add);
 
         return list;
     }
