@@ -4,6 +4,9 @@ package com.heu.poet.tszz.sleepstory;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * @author MengQi
@@ -18,7 +21,7 @@ public class SleepStory {
 
     private String dateTime;
 
-    private String content="";
+    private String content = "";
 
     private String title;
 
@@ -30,16 +33,21 @@ public class SleepStory {
 
     private String status;
 
-    private int good=1;
+    private int like = 0;
 
-    private int bad=1;
+    private int dislike = 0;
+
+    private List<String> likeList = new ArrayList<>();
+
+    private List<String> dislikeList = new ArrayList<>();
 
     private long timestamp;
 
     public SleepStory() {
-super();    }
+        super();
+    }
 
-    public SleepStory(String id, String dateTime, String content, String title, String author, String authorId, String toWho, String status, int good, int bad, long timestamp) {
+    public SleepStory(String id, String dateTime, String content, String title, String author, String authorId, String toWho, String status, int like, int dislike, List<String> likeList, List<String> dislikeList, long timestamp) {
         this.id = id;
         this.dateTime = dateTime;
         this.content = content;
@@ -48,9 +56,43 @@ super();    }
         this.authorId = authorId;
         this.toWho = toWho;
         this.status = status;
-        this.good = good;
-        this.bad = bad;
+        this.like = like;
+        this.dislike = dislike;
+        this.likeList = likeList;
+        this.dislikeList = dislikeList;
         this.timestamp = timestamp;
+    }
+
+    public List<String> getLikeList() {
+        return likeList;
+    }
+
+    public int getLike() {
+        return like;
+    }
+
+    public void setLike(int like) {
+        this.like = like;
+    }
+
+    public int getDislike() {
+        return dislike;
+    }
+
+    public void setDislike(int dislike) {
+        this.dislike = dislike;
+    }
+
+    public void setLikeList(List<String> likeList) {
+        this.likeList = likeList;
+    }
+
+    public List<String> getDislikeList() {
+        return dislikeList;
+    }
+
+    public void setDislikeList(List<String> dislikeList) {
+        this.dislikeList = dislikeList;
     }
 
     public long getTimestamp() {
@@ -85,21 +127,6 @@ super();    }
         this.status = status;
     }
 
-    public int getGood() {
-        return good;
-    }
-
-    public void setGood(int good) {
-        this.good = good;
-    }
-
-    public int getBad() {
-        return bad;
-    }
-
-    public void setBad(int bad) {
-        this.bad = bad;
-    }
 
     public String getId() {
         return id;

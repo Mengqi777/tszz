@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author MengQi
@@ -35,6 +36,16 @@ public class SleepStoryController {
         return sleepStoryService.getByDateContains(dateTime);
     }
 
+    @RequestMapping(value = "like", method = RequestMethod.POST)
+    public void like(@RequestBody Map<String,String> map) {
+       sleepStoryService.like(map);
+    }
+
+
+    @RequestMapping(value = "dislike", method = RequestMethod.POST)
+    public void dislike(@RequestBody Map<String,String> map) {
+       sleepStoryService.dislike(map);
+    }
 
     @RequestMapping(value = "getbyid", method = RequestMethod.GET)
     public SleepStory getById(@RequestParam("id") String id) {

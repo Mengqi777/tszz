@@ -1,6 +1,7 @@
 package com.heu.poet.tszz.sleepstory;
 
 
+import com.sun.org.apache.xerces.internal.impl.xpath.XPath;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author MengQi
@@ -73,6 +75,29 @@ public class SleepStoryService {
         mongoTemplate.updateFirst(query,update,SleepStory.class);
     }
 
+
+    public void like(Map<String,String > map){
+        SleepStory sleepStory=sleepStoryRepository.findSleepStoryById(map.get("id"));
+        List<String> likeList = sleepStory.getLikeList()==null?new ArrayList<>():sleepStory.getLikeList();
+        likeList.add(map.get("nickName")+"-commit-"+map.get("userId"));
+        Query query = new Query();
+        query.addCriteria(new Criteria("_id").is(map.get("id")));
+        Update update = new Update();
+        update.set("like", likeList.size());
+        update.set("likeList", likeList);
+        mongoTemplate.updateFirst(query,update,SleepStory.class);
+    }
+    public void dislike(Map<String,String > map){
+        SleepStory sleepStory=sleepStoryRepository.findSleepStoryById(map.get("id"));
+        List<String> dislikeList = sleepStory.getDislikeList()!=null?sleepStory.getDislikeList():new ArrayList<>();
+        dislikeList.add(map.get("nickName")+"-commit-"+map.get("userId"));
+        Query query = new Query();
+        query.addCriteria(new Criteria("_id").is(map.get("id")));
+        Update update = new Update();
+        update.set("dislike", dislikeList.size());
+        update.set("dislikeList", dislikeList);
+        mongoTemplate.updateFirst(query,update,SleepStory.class);
+    }
 
     public List<SleepStory> getByTimestampLess(long timestamp,String toWho){
         List<SleepStory> list = new ArrayList<>();
