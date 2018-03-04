@@ -18,7 +18,8 @@ public class AccessToken {
     private int expires_in;
 
     public AccessToken() {
-super();    }
+        super();
+    }
 
     public AccessToken(String id, String access_token, long timestamp, int expires_in) {
         this.id = id;

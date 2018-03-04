@@ -7,8 +7,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public enum WSListenserPool {
     INSTANCE;
-    private ConcurrentHashMap<String,WebSocketSession> pool=new ConcurrentHashMap<>();
-    private int onlineCount=0;
+    private ConcurrentHashMap<String, WebSocketSession> pool = new ConcurrentHashMap<>();
+    private int onlineCount = 0;
 
 
     public int getOnlineCount() {
@@ -20,11 +20,11 @@ public enum WSListenserPool {
     }
 
 
-    public void onlineCountAdd(){
+    public void onlineCountAdd() {
         this.onlineCount++;
     }
 
-    public void onlineCountRemove(){
+    public void onlineCountRemove() {
         this.onlineCount--;
     }
 
@@ -36,11 +36,11 @@ public enum WSListenserPool {
         this.pool = pool;
     }
 
-    public void listenserAdd(String nickName, WebSocketSession session){
-        this.pool.put(nickName,session);
+    public void listenserAdd(String nickName, WebSocketSession session) {
+        this.pool.put(nickName, session);
     }
 
-    public void listenserRemove(String nickName,WebSocketSession session){
-        this.pool.remove(nickName,session);
+    public void listenserRemove(String nickName, WebSocketSession session) {
+        this.pool.remove(nickName, session);
     }
 }

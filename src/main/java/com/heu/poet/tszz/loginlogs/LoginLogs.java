@@ -19,7 +19,7 @@ public class LoginLogs {
 
     private String page;
 
- private UserInfo userInfo;
+    private UserInfo userInfo;
 
     public LoginLogs() {
         super();

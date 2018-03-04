@@ -25,10 +25,9 @@ public class LoginLogsController {
     }
 
 
-
     @RequestMapping(value = "add", method = RequestMethod.POST)
     public LoginLogs add(@RequestBody LoginLogs loginLogs, HttpServletRequest request) {
-        return service.add(loginLogs,request);
+        return service.add(loginLogs, request);
     }
 
 }

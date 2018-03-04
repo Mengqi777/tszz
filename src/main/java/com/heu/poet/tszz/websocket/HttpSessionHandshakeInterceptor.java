@@ -8,7 +8,6 @@ import org.springframework.web.socket.server.HandshakeInterceptor;
 
 import javax.servlet.http.HttpSession;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * @author MengQi
@@ -20,9 +19,9 @@ public class HttpSessionHandshakeInterceptor implements HandshakeInterceptor {
         if (request instanceof ServletServerHttpRequest) {
             ServletServerHttpRequest serverHttpRequest = (ServletServerHttpRequest) request;
             HttpSession session = serverHttpRequest.getServletRequest().getSession();
-            String nickName=serverHttpRequest.getServletRequest().getParameter("nickName");
+            String nickName = serverHttpRequest.getServletRequest().getParameter("nickName");
             if (session.getAttribute("nickName") == null) {
-                session.setAttribute("nickName",nickName);
+                session.setAttribute("nickName", nickName);
             }
         }
         return true;

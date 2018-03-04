@@ -26,8 +26,8 @@ import java.util.logging.Logger;
  */
 @Service
 public class TravelService {
-   private Logger logger = Logger.getLogger("com.heu.poet.tszz.travel");
-private final String DATATIME_FORMAT="yyyy-MM-dd HH:mm:ss";
+    private Logger logger = Logger.getLogger("com.heu.poet.tszz.travel");
+    private final String DATATIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
     private TravelRepository travelRepository;
     private PetRepository petRepository;
@@ -142,7 +142,7 @@ private final String DATATIME_FORMAT="yyyy-MM-dd HH:mm:ss";
             while (m > 0) {
                 m--;
                 try {
-                    Thread.sleep(60*1000);
+                    Thread.sleep(60 * 1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

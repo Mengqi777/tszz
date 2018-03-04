@@ -13,13 +13,14 @@ import javax.servlet.http.HttpServletRequest;
 public class LoginLogsService {
 
     private final LoginLogsRepository loginLogsRepository;
+
     @Autowired
     public LoginLogsService(LoginLogsRepository loginLogsRepository) {
         this.loginLogsRepository = loginLogsRepository;
     }
 
 
-    public LoginLogs add(LoginLogs loginLogs, HttpServletRequest request){
+    public LoginLogs add(LoginLogs loginLogs, HttpServletRequest request) {
         loginLogs.setIp(request.getRemoteAddr());
         loginLogs.setNickName(loginLogs.getUserInfo().getNickName());
         return loginLogsRepository.insert(loginLogs);

@@ -10,11 +10,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("web")
 @SuppressWarnings(value = "unused")
-public class WebController
-{
+public class WebController {
 
     @RequestMapping(value = "chat")
-    public String chat(){
+    public String chat() {
         return "chatpage";
     }
 }

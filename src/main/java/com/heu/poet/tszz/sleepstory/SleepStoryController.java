@@ -37,14 +37,14 @@ public class SleepStoryController {
     }
 
     @RequestMapping(value = "like", method = RequestMethod.POST)
-    public void like(@RequestBody Map<String,String> map) {
-       sleepStoryService.like(map);
+    public void like(@RequestBody Map<String, String> map) {
+        sleepStoryService.like(map);
     }
 
 
     @RequestMapping(value = "dislike", method = RequestMethod.POST)
-    public void dislike(@RequestBody Map<String,String> map) {
-       sleepStoryService.dislike(map);
+    public void dislike(@RequestBody Map<String, String> map) {
+        sleepStoryService.dislike(map);
     }
 
     @RequestMapping(value = "getbyid", method = RequestMethod.GET)
@@ -65,17 +65,16 @@ public class SleepStoryController {
 
     @RequestMapping(value = "getbytimestamp", method = RequestMethod.GET)
     public List<SleepStory> getByTimestampLess(@RequestParam("timestamp") long timestamp,
-                                               @RequestParam("toWho") String  toWho) {
-        return sleepStoryService.getByTimestampLess(timestamp,toWho);
+                                               @RequestParam("toWho") String toWho) {
+        return sleepStoryService.getByTimestampLess(timestamp, toWho);
     }
 
 
     @RequestMapping(value = "getbyauthorid", method = RequestMethod.GET)
-    public List<SleepStory> getByAuthorId(@RequestParam("authorId") String  authorId,
-                                          @RequestParam("pageNumber") int  pageNumber) {
-        return sleepStoryService.getByAuthorId(authorId,pageNumber);
+    public List<SleepStory> getByAuthorId(@RequestParam("authorId") String authorId,
+                                          @RequestParam("pageNumber") int pageNumber) {
+        return sleepStoryService.getByAuthorId(authorId, pageNumber);
     }
-
 
 
     @RequestMapping(value = "delbyid", method = RequestMethod.GET)

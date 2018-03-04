@@ -13,11 +13,12 @@ import java.util.List;
 @SuppressWarnings(value = "unused")
 public interface SleepStoryRepository extends MongoRepository<SleepStory, String> {
     SleepStory findSleepStoryById(String id);
-    Page<SleepStory> findSleepStoriesByAuthorIdAndStatus(String authorId,String status, Pageable pageable);
-    List<SleepStory> findSleepStoryByDateTimeContainsAndStatus(String dateTime,String status);
 
-    Page<SleepStory>  findSleepStoryByTimestampLessThanAndToWhoAndStatus(long timestamp,String toWho,String status, Pageable pageable);
+    Page<SleepStory> findSleepStoriesByAuthorIdAndStatus(String authorId, String status, Pageable pageable);
 
+    List<SleepStory> findSleepStoryByDateTimeContainsAndStatus(String dateTime, String status);
+
+    Page<SleepStory> findSleepStoryByTimestampLessThanAndToWhoAndStatus(long timestamp, String toWho, String status, Pageable pageable);
 
     @Override
     Page<SleepStory> findAll(Pageable pageable);

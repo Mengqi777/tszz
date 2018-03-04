@@ -12,22 +12,22 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
  */
 @Configuration
 @EnableWebSocket
-public class WebSocketConfig implements WebSocketConfigurer{
+public class WebSocketConfig implements WebSocketConfigurer {
 
-//    @Bean
+    //    @Bean
 //    public ServerEndpointExporter serverEndpointExporter() {
 //        return new ServerEndpointExporter();
 //    }
 //
     @Bean
-    public MyWebSocketHandler webSocketHandler(){
+    public MyWebSocketHandler webSocketHandler() {
         return new MyWebSocketHandler();
     }
 
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry webSocketHandlerRegistry) {
-        webSocketHandlerRegistry.addHandler(webSocketHandler(),"/websocket")
+        webSocketHandlerRegistry.addHandler(webSocketHandler(), "/websocket")
                 .addInterceptors(new HttpSessionHandshakeInterceptor());
     }
 }
