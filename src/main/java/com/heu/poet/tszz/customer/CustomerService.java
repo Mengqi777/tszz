@@ -16,6 +16,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author MengQi
@@ -24,10 +26,13 @@ import java.util.Map;
 @Service
 public class CustomerService {
 
+    private Logger logger=Logger.getLogger(CustomerService.class.getName());
 
     private CustomerRepository customerRepository;
 
     private String rootPath = System.getProperty("user.dir");
+
+
 
     @Autowired
     public CustomerService(CustomerRepository customerRepository) {
@@ -36,7 +41,7 @@ public class CustomerService {
 
 
     public Map<String, Object> login(String code, String userInfo, HttpServletRequest request) throws IOException {
-        System.out.println(code);
+
         Customer customer;
         Map<String, Object> map = new HashMap<>();
         final String appid = "wx0616b5c2924f4ec9";
@@ -86,6 +91,7 @@ public class CustomerService {
         } finally {
             httpclient.close();
         }
+        logger.log(Level.INFO,customer.getNickName());
         return map;
     }
 
