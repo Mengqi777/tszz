@@ -8,12 +8,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @create 2018-02-23 11:29
  */
 @Controller
-@RequestMapping("web")
+@RequestMapping("")
 @SuppressWarnings(value = "unused")
 public class WebController {
 
-    @RequestMapping(value = "chat")
+    @RequestMapping(value = "web/chat")
     public String chat() {
         return "chatpage";
+    }
+
+    @RequestMapping(value = "mystory")
+    public String myStory() {
+        return "mystorypage";
+    }
+
+    @RequestMapping(value = "storydetail")
+    public String storyDetail() {
+        return "storydetailpage";
     }
 }

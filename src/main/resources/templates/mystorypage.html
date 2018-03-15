@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:v-bind="http://java.sun.com/jsf/composite">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>余生讲讲别人的故事吧</title>
+    <link rel="shortcut icon" href="/images/images/favicon.ico" type="image/x-icon"/>
+    <link rel="stylesheet" href="/images/css/bootstrap.min.css" type="text/css">
+    <script type="text/javascript" src="/images/js/vue.min.js"></script>
+    <script type="text/javascript" src="/images/js/jquery-3.2.0.min.js"></script>
+    <script type="text/javascript" src="/images/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/images/js/axios.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            <table id="story" class="table table-striped" style="margin-top: 100px">
+                <thead>
+                <tr>
+                    <th>故事列表</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr v-for="story in storyList">
+                    <td><a href="javascript:void(0)" @click="goToStory(story.id)">{{story.title}}</a></td>
+                </tr>
+                </tbody>
+            </table>
+            <table class="table table-striped" style="margin-top: 30px">
+               <caption><a href="javascript:void(0)" onclick="getMore()">更多</a></caption>
+            </table>
+        </div>
+        <div class="col-md-4"></div>
+    </div>
+</div>
+<script>
+
+
+    $(document).ready(function(){
+     story.getAll2Every();
+    });
+    function getMore(){
+    story.getAll2Every();
+    }
+
+    var story = new Vue({
+        el: '#story',
+        data: {
+            storyList: [],
+            pageNumber:0
+        },
+        methods:{
+            getAll2Every:function () {
+                console.log(story.pageNumber);
+                axios.get("/sleepstory/getall2every",{
+                    params: {
+                        pageNumber: story.pageNumber
+                    }
+                }).then(function (response) {
+                    story.storyList= story.storyList.concat(response.data);
+                    console.log(story.storyList);
+                    story.pageNumber=story.pageNumber+1
+                })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            },
+            goToStory:function (e) {
+                sessionStorage.setItem("firstId",e);
+                window.location.href="/storydetail";
+            }
+        }
+    });
+
+</script>
+</body>
+</html>

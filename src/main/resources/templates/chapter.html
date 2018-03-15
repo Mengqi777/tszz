@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<html lang="zh">
 <head>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title id="title">读书有害健康</title>
@@ -24,15 +24,15 @@
                     </tr>
                     </thead>
                 </table>
-                <div id="contentdata" style="font-size: 18px" >
+                <div id="contentdata" style="font-size: 18px">
 
                 </div>
                 <div id="funcbtn" style="text-align: center">
                     <br/>
                     <h4>
-                    <button id="pre" class="btn btn-link" v-on:click="gopre">上一章</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <a  class="btn btn-link" v-bind:href="mulu">目录</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <button id="next" class="btn btn-link" v-on:click="gonext">下一章</button>
+                        <button id="pre" class="btn btn-link" v-on:click="gopre">上一章</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <a class="btn btn-link" v-bind:href="mulu">目录</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <button id="next" class="btn btn-link" v-on:click="gonext">下一章</button>
                     </h4>
                     <br/>
                 </div>
@@ -43,9 +43,10 @@
             </div>
         </div>
     </div>
-    <script>
+</div>
+<script>
 
-function test(event) {
+    function test(event) {
 //    event=event||window.event;
 //    var height=screen.availHeight;
 //    var width=screen.availWidth;
@@ -63,91 +64,90 @@ function test(event) {
 //        $("#contentdata").animate({ scrollTop: page_y+height-150 }, 500);
 //
 //    }
-}
-
-        
-        function load (){
-            var height=screen.availHeight;
-            var width=screen.availWidth;
-            document.addEventListener('touchstart',touch, false);
-            document.addEventListener('touchmove',touch, false);
-            document.addEventListener('touchend',touch, false);
+    }
 
 
+    function load() {
+        var height = screen.availHeight;
+        var width = screen.availWidth;
+        document.addEventListener('touchstart', touch, false);
+        document.addEventListener('touchmove', touch, false);
+        document.addEventListener('touchend', touch, false);
 
-            function touch (event){
-                var event = event || window.event;
 
-                var oInp = document.getElementById("contentdata");
+        function touch(event) {
+            var event = event || window.event;
 
-                switch(event.type){
-                    case "touchstart":
-                        var touch_x=event.touches[0].clientX;
-                        var touch_y=event.touches[0].clientY;
-                        var page_y=window.pageYOffset;
-                        var page_x=window.pageXOffset;
-                        if(touch_y<=(height/2)){
-                            $("html,body").animate({ scrollTop: page_y-height+150 }, 300);
-                        }else if(touch_y<height-200){
-                            $("html,body").animate({ scrollTop: page_y+height-150 }, 300);
+            var oInp = document.getElementById("contentdata");
 
-                        }
+            switch (event.type) {
+                case "touchstart":
+                    var touch_x = event.touches[0].clientX;
+                    var touch_y = event.touches[0].clientY;
+                    var page_y = window.pageYOffset;
+                    var page_x = window.pageXOffset;
+                    if (touch_y <= (height / 2)) {
+                        $("html,body").animate({scrollTop: page_y - height + 150}, 300);
+                    } else if (touch_y < height - 200) {
+                        $("html,body").animate({scrollTop: page_y + height - 150}, 300);
 
-                        break;
-                }
+                    }
 
+                    break;
             }
+
         }
-        window.addEventListener('load',load, false);
+    }
+
+    window.addEventListener('load', load, false);
 
 
-
-        function updateContent(response){
-            if (response.data.nextChapter == '0') {
-                $("#next").hide();
-            }else {
-                $("#next").show();
-            }
-            if (response.data.preChapter == '0') {
-                $("#pre").hide();
-            }else {
-                $("#pre").show();
-            }
-            chapter.preChapter=response.data.preChapter;
-            chapter.nextChapter=response.data.nextChapter;
-
-            contentdata.content=response.data.content;
-            chapter.chapterName=response.data.chapterName;
-            contentdata.update();
-            window.scrollTo(0,0);
+    function updateContent(response) {
+        if (response.data.nextChapter == '0') {
+            $("#next").hide();
+        } else {
+            $("#next").show();
         }
+        if (response.data.preChapter == '0') {
+            $("#pre").hide();
+        } else {
+            $("#pre").show();
+        }
+        chapter.preChapter = response.data.preChapter;
+        chapter.nextChapter = response.data.nextChapter;
 
-        var chapter = new Vue({
-            el: '#chapter',
-            data: {
-                chapterName: '${chapterName}',
-                chapterId: '${chapterId}',
-                preChapter: '${preChapter}',
-                nextChapter: '${nextChapter}'
-            }
-        });
+        contentdata.content = response.data.content;
+        chapter.chapterName = response.data.chapterName;
+        contentdata.update();
+        window.scrollTo(0, 0);
+    }
 
-        var contentdata = new Vue({
-            el: '#contentdata',
-            data:{
-                content:'${content}'
-            },
-            created:function () {
+    var chapter = new Vue({
+        el: '#chapter',
+        data: {
+            chapterName: '${chapterName}',
+            chapterId: '${chapterId}',
+            preChapter: '${preChapter}',
+            nextChapter: '${nextChapter}'
+        }
+    });
+
+    var contentdata = new Vue({
+        el: '#contentdata',
+        data: {
+            content: '${content}'
+        },
+        created: function () {
+            $("#contentdata").html(this.content)
+        },
+        methods: {
+            update: function () {
                 $("#contentdata").html(this.content)
-            },
-            methods:{
-                update:function () {
-                    $("#contentdata").html(this.content)
-                }
             }
-        });
+        }
+    });
 
-        var funcbtn = new Vue({
+    var funcbtn = new Vue({
             el: '#funcbtn',
             data: {
                 dbName: '${dbName}',
@@ -161,20 +161,20 @@ function test(event) {
                     $("#pre").hide();
                 }
             },
-            methods:{
-                gopre:function (event) {
+            methods: {
+                gopre: function (event) {
                     axios({
                         method: 'get',
-                        url: '/web/novel/'+this.dbName+"/go/"+chapter.preChapter
+                        url: '/web/novel/' + this.dbName + "/go/" + chapter.preChapter
                     }).then(function (response) {
                         updateContent(response);
                     });
                 },
 
-                gonext:function (event) {
+                gonext: function (event) {
                     axios({
                         method: 'get',
-                        url: '/web/novel/'+this.dbName+"/go/"+chapter.nextChapter
+                        url: '/web/novel/' + this.dbName + "/go/" + chapter.nextChapter
                     }).then(function (response) {
                         updateContent(response);
                     })
@@ -182,14 +182,14 @@ function test(event) {
                 }
             }
         }
-        );
+    );
 
-        var title = new Vue({
-            el: '#title',
-            data: {
-                chapterName: '${chapterName}'
-            }
-        });
-    </script>
+    var title = new Vue({
+        el: '#title',
+        data: {
+            chapterName: '${chapterName}'
+        }
+    });
+</script>
 </body>
 </html>

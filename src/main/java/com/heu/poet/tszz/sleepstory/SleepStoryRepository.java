@@ -14,6 +14,12 @@ import java.util.List;
 public interface SleepStoryRepository extends MongoRepository<SleepStory, String> {
     SleepStory findSleepStoryById(String id);
 
+    SleepStory findFirstByTimestampLessThanAndToWhoAndStatus(long timestamp,String toWho,String status);
+
+    SleepStory findFirstByTimestampGreaterThanAndToWhoAndStatus(long timestamp,String toWho,String status);
+
+
+
     Page<SleepStory> findSleepStoriesByAuthorIdAndStatus(String authorId, String status, Pageable pageable);
 
     List<SleepStory> findSleepStoryByDateTimeContainsAndStatus(String dateTime, String status);
@@ -22,4 +28,6 @@ public interface SleepStoryRepository extends MongoRepository<SleepStory, String
 
     @Override
     Page<SleepStory> findAll(Pageable pageable);
+
+    Page<SleepStory> findSleepStoriesByToWho(String toWho,Pageable pageable);
 }

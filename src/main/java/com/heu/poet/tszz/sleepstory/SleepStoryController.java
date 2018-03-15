@@ -47,14 +47,33 @@ public class SleepStoryController {
         sleepStoryService.dislike(map);
     }
 
+
     @RequestMapping(value = "getbyid", method = RequestMethod.GET)
     public SleepStory getById(@RequestParam("id") String id) {
         return sleepStoryRepository.findSleepStoryById(id);
     }
 
+
+    @RequestMapping(value = "getpre", method = RequestMethod.GET)
+    public SleepStory getPre(@RequestParam("timestamp") long timestamp) {
+        return sleepStoryService.getPre(timestamp);
+    }
+
+    @RequestMapping(value = "getnext", method = RequestMethod.GET)
+    public SleepStory getNext(@RequestParam("timestamp") long timestamp) {
+        return sleepStoryService.getNext(timestamp);
+    }
+
+
+
     @RequestMapping(value = "getall", method = RequestMethod.GET)
     public List<SleepStory> getAll(@RequestParam("pageNumber") int pageNumber) {
         return sleepStoryService.getAll(pageNumber);
+    }
+
+    @RequestMapping(value = "getall2every", method = RequestMethod.GET)
+    public List<Map<String,String>> getAll2Every(@RequestParam("pageNumber") int pageNumber) {
+        return sleepStoryService.getAll2Every(pageNumber);
     }
 
     @RequestMapping(value = "update", method = RequestMethod.POST)

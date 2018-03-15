@@ -12,6 +12,7 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -44,12 +45,30 @@ public class SleepStoryService {
 
 
     public List<SleepStory> getAll(int pageNumber) {
-        PageRequest pageRequest = buildPageRequest(pageNumber, 10, "id");
+        PageRequest pageRequest = buildPageRequest(pageNumber, 10, "timestamp");
         Page<SleepStory> pages = sleepStoryRepository.findAll(pageRequest);
         List<SleepStory> list = new ArrayList<>();
         pages.forEach(list::add);
         return list;
     }
+
+
+    public List<Map<String, String>> getAll2Every(int pageNumber) {
+        PageRequest pageRequest = buildPageRequest(pageNumber, 10, "timestamp");
+        Page<SleepStory> pages = sleepStoryRepository.findSleepStoriesByToWho("everyone", pageRequest);
+        List<Map<String, String>> list = new ArrayList<>();
+        pages.forEach(page -> {
+                    Map<String, String> map = new HashMap<>();
+                    map.put("title", page.getTitle());
+                    map.put("Author", page.getAuthor());
+                    map.put("id", page.getId());
+                    map.put("dateTime", page.getDateTime());
+                    list.add(map);
+                }
+        );
+        return list;
+    }
+
 
     public SleepStory getByDateContains(String dateTime) {
         List<SleepStory> res = sleepStoryRepository.findSleepStoryByDateTimeContainsAndStatus(dateTime, "1");
@@ -114,4 +133,22 @@ public class SleepStoryService {
     }
 
 
+    SleepStory getPre(long timestamp){
+        Query query=new Query();
+        query.addCriteria(Criteria.where("timestamp").gt(timestamp));
+        query.addCriteria(Criteria.where("toWho").is("everyone"));
+        query.addCriteria(Criteria.where("status").is("1"));
+        query.limit(1);
+        return mongoTemplate.findOne(query, SleepStory.class);
+    }
+
+
+    SleepStory getNext(long timestamp){
+        Query query=new Query();
+        query.addCriteria(Criteria.where("timestamp").lt(timestamp));
+        query.addCriteria(Criteria.where("toWho").is("everyone"));
+        query.addCriteria(Criteria.where("status").is("1"));
+        query.limit(1);
+        return mongoTemplate.findOne(query, SleepStory.class);
+    }
 }

@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title id="title">读书有害健康</title>
+    <link rel="shortcut icon" href="/images/images/favicon.ico" type="image/x-icon"/>
+    <link rel="stylesheet" href="/images/css/bootstrap.min.css" type="text/css">
+    <script type="text/javascript" src="/images/js/vue.min.js"></script>
+    <script type="text/javascript" src="/images/js/jquery-3.2.0.min.js"></script>
+    <script type="text/javascript" src="/images/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/images/js/axios.min.js"></script>
+    <script type="text/javascript" src="/images/js/markdown.js"></script>
+</head>
+<body style="background-color: #F1E5C7" >
+<div class="container">
+    <div class="row">
+        <div class="col-md-4" ></div>
+        <div class="col-md-4">
+            <div ><h4><a href="/mystory">返回</a></h4>
+                <div id="story">
+                <table  class="table table-striped" style="margin-top: 10px">
+                    <thead>
+                    <tr>
+                        <th>{{story.title}}</th>
+                    </tr>
+                    </thead>
+                </table>
+                </div>
+                <div id="contentdata" style="font-size: 18px">
+
+                </div>
+                <div id="funcbtn" style="text-align: center">
+                    <br/>
+                    <h4>
+                        <button id="pre" class="btn btn-link" v-on:click="gopre">上一篇</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <a class="btn btn-link" href="/mystory">返回</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <button id="next" class="btn btn-link" v-on:click="gonext">下一篇</button>
+                    </h4>
+                    <br/>
+                </div>
+            </div>
+            <div class="col-md-4">
+
+
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+    $(document).ready(function(){
+        var firstId=sessionStorage.getItem("firstId");
+        story.getStory(firstId);
+
+    });
+
+    function load() {
+        var height = screen.availHeight;
+        var width = screen.availWidth;
+        document.addEventListener('touchstart', touch, false);
+        document.addEventListener('touchmove', touch, false);
+        document.addEventListener('touchend', touch, false);
+
+
+        function touch(event) {
+            var event = event || window.event;
+
+            var oInp = document.getElementById("contentdata");
+
+            switch (event.type) {
+                case "touchstart":
+                    var touch_x = event.touches[0].clientX;
+                    var touch_y = event.touches[0].clientY;
+                    var page_y = window.pageYOffset;
+                    var page_x = window.pageXOffset;
+                    if (touch_y <= (height / 2)) {
+                        $("html,body").animate({scrollTop: page_y - height + 150}, 300);
+                    } else if (touch_y < height - 200) {
+                        $("html,body").animate({scrollTop: page_y + height - 150}, 300);
+
+                    }
+
+                    break;
+            }
+
+        }
+    }
+
+    window.addEventListener('load', load, false);
+
+
+
+    var story = new Vue({
+        el: '#story',
+        data: {
+            story:{
+                id:"",
+                dateTime:"",
+                content:"",
+                title:"",
+                author:"",
+                authorId:"",
+                toWho:"",
+                status:"",
+                likeList:[],
+                dislikeList:[],
+                timestamp:0
+            },
+            prestory: {
+                id:"",
+                dateTime:"",
+                content:"",
+                title:"",
+                author:"",
+                authorId:"",
+                toWho:"",
+                status:"",
+                likeList:[],
+                dislikeList:[],
+                timestamp:0
+            },
+            nextstory: {
+                id:"",
+                dateTime:"",
+                content:"",
+                title:"",
+                author:"",
+                authorId:"",
+                toWho:"",
+                status:"",
+                likeList:[],
+                dislikeList:[],
+                timestamp:0
+            }
+        },
+        methods:{
+            getStory:function (id) {
+                axios.get("/sleepstory/getbyid",{
+                    params: {
+                        id: id
+                    }
+                }).then(function (response) {
+                    if(response.data==="") return;
+                    story.story=response.data;
+                    console.log(story.story);
+                   var  html_content = markdown.toHTML( story.story.content );
+                    contentdata.update(html_content)
+                })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            }
+        }
+    });
+
+    var contentdata = new Vue({
+        el: '#contentdata',
+        data: {
+            content: ""
+        },
+        created: function () {
+            $("#contentdata").html(this.content)
+        },
+        methods: {
+            update: function (content) {
+                $("#contentdata").html(content)
+            }
+        }
+    });
+
+    var funcbtn = new Vue({
+            el: '#funcbtn',
+            methods: {
+                gopre: function (event) {
+                    axios.get("/sleepstory/getpre",{
+                        params: {
+                            timestamp: story.story.timestamp
+                        }
+                    }).then(function (response) {
+
+                        if(response.data==="") return;
+                        story.story=response.data;
+
+                        var  html_content = markdown.toHTML( story.story.content );
+                        contentdata.update(html_content);
+                        window.scrollTo(0, 0);
+                    })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+                },
+
+                gonext: function (event) {
+                    axios.get("/sleepstory/getnext",{
+                        params: {
+                            timestamp: story.story.timestamp
+                        }
+                    }).then(function (response) {
+                        if(response.data==="") return;
+                        story.story=response.data;
+                        var  html_content = markdown.toHTML( story.story.content );
+                        contentdata.update(html_content);
+                        window.scrollTo(0, 0);
+                    })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+                }
+            }
+        }
+    );
+
+    var title = new Vue({
+        el: '#title',
+        data: {
+            storyName: story.story.title
+        }
+    });
+</script>
+</body>
+</html>
